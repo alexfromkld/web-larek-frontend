@@ -3,7 +3,7 @@ import {
 	createElement,
 	ensureElement,
 } from '../../utils/utils';
-import { EventEmitter } from '../base/events';
+import { IEvents } from '../base/events';
 
 interface IBasketView {
 	items: HTMLElement[];
@@ -16,7 +16,7 @@ export class Basket extends Component<IBasketView> {
 	protected _total: HTMLElement;
 	protected _button: HTMLElement;
 
-	constructor(container: HTMLElement, protected events: EventEmitter) {
+	constructor(container: HTMLElement, protected events: IEvents) {
 		super(container);
 
 		this._list = ensureElement<HTMLElement>('.basket__list', this.container);

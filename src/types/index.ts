@@ -1,4 +1,6 @@
-export type ItemCategory = 'софт-скил' | 'другое' | 'дополнительное' | 'кнопка' | 'хард-скил'; 
+export type ItemCategory = 'софт-скил' | 'другое' | 'дополнительное' | 'кнопка' | 'хард-скил';
+
+export type FormErrors = Partial<Record<keyof IOrder, string>>
 
 export interface IItem {
   category: ItemCategory,
@@ -29,13 +31,14 @@ export interface IOrderResult {
   error?: string
 }
 
-//API
 export interface IShopApi {
   getItems: () => Promise<IItemList>;
   getItem: (id: string) => Promise<IItem>;
   makeOrder: (order: IOrder) => Promise<IOrderResult>
 }
 
-//Events
+
+
+
 
 
