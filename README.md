@@ -128,5 +128,45 @@ yarn build
    - render
 ```
 11. Класс Order наследует класс Form. Выполняет функцию отображния заказа и управление им. Реагирует на изменение состояние кнопок выбора оплаты. Так же устанвливает информацию покупателя.
-12. Класс Success наследует абстрактный класс Component. Оторбражает результаты заказа. 
+12. Класс Success наследует абстрактный класс Component. Оторбражает результаты заказа.
+
+## Типы
+export type ItemCategory = 'софт-скил' | 'другое' | 'дополнительное' | 'кнопка' | 'хард-скил';
+
+export type FormErrors = Partial<Record<keyof IOrder, string>>
+
+export interface IItem {
+  category: ItemCategory,
+  description: string,
+  id: string,
+  image: string,
+  price: number | null,
+  title: string
+}
+
+export interface IItemList {
+  total: number,
+  items: IItem[]
+}
+
+export interface IOrder {
+  payment: string,
+  address: string,
+  email: string,
+  phone: string,
+  total: number,
+  items: string[]
+}
+
+export interface IOrderResult {
+  id: string,
+  total: number,
+  error?: string
+}
+
+export interface IShopApi {
+  getItems: () => Promise<IItemList>;
+  getItem: (id: string) => Promise<IItem>;
+  makeOrder: (order: IOrder) => Promise<IOrderResult>
+}
    
