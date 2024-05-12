@@ -158,14 +158,51 @@ export interface IShopApi {
 ## View
 
 1. Класс Page
-   Наследует абстрактный класс Component. Отображает главную страницу. Имеет следующие методы:
+   Этот код представляет класс Page, который расширяет базовый класс Component и представляет страницу веб-приложения. Вот краткое описание его основных элементов:
+   Inteface IPage:
+   ```
+   counter: number
+   catalog: HTMLElement[]
+   locked: boolean
+   ```
+   Класс Page
+   ```
+   constructor(HTMLElement, IEvents) Конструктор класса, принимающий контейнерный элемент страницы и объект событий. Вызывает конструктор родительского класса Component и инициализирует элементы страницы.
+   ```
+   Свойства
+   ```
+   - #_counter: HTMLElement эл-т счётчика
+   - #_catalog HTMLElement эл-т каталога
+   - #_wrapper HTMLElement эл-т обёртки
+   - #_basket HTMLElement эл-т корзины
+   ```
+   Методы
    ```
    -set counter (устанавливает счётчик товаров в корзине)
    -set catalog (устанавливет список товаров)
    -set locked (блокирует/разблокирует прокрутку страницы)
    ```
-3. Класс Item
-   Наследует абстрактный класс Component. Содержит в себе методы для управления и отображением товара. Содержит следущие свойства и методы:
+2. Класс Item<T>
+   Этот код представляет класс Item, который расширяет базовый класс Component и представляет отдельный элемент или товар на веб-странице. Вот краткое описание его основных элементов:
+   
+   Интерфейс IItemActions:
+     onClick: (event: MouseEvent): void определяет структуру обработчиков действий
+   
+   Интерфейс IItem<T>
+   ```
+   - index: number
+   - title: string
+   - description: string | string[]
+   - image: string
+   - status: T
+   - price: string
+   - category: ItemCategory(см. выше в Типах)
+   ```
+   Класс Item<T>:
+
+   constructor(string, HTMELement, ItemActions?) принимает имя блока, контейнерный элемент и {} действий -> вызывает родительский конструктор и инициализирует элементы товара
+   
+   Свойства:
    ```
    - #_title
    - #_button
@@ -173,7 +210,9 @@ export interface IShopApi {
    - #_image
    - #_category
    - #_price
-
+   ```
+   Методы геттеры и сеттеры: 
+   ```
    - set/get id
    - set/get title
    - set/get image
