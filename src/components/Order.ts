@@ -1,5 +1,5 @@
 import {Form} from "./common/Form";
-import {IOrder} from "../types";
+import {BaseEvents, IOrder} from "../types";
 import {IEvents} from "./base/events";
 import {ensureElement} from "../utils/utils";
 
@@ -37,6 +37,6 @@ export class Order extends Form<IOrder> {
     }
 
     set payment(value: string) {
-        this.events.emit('order:setPaymentType', { paymentType: value });
+        this.events.emit(BaseEvents.SET_PAYMENT_TYPE, { paymentType: value });
     }
 }

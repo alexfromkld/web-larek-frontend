@@ -4,6 +4,7 @@ import {
 	ensureElement,
 } from '../../utils/utils';
 import { IEvents } from '../base/events';
+import { BaseEvents } from '../../types';
 
 interface IBasketView {
 	items: HTMLElement[];
@@ -25,7 +26,7 @@ export class Basket extends Component<IBasketView> {
 
 		if (this._button) {
 			this._button.addEventListener('click', () => {
-				events.emit('order:open');
+				events.emit(BaseEvents.OPEN_ORDER);
 			});
 		}
 

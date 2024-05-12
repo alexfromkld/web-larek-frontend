@@ -1,4 +1,4 @@
-import { FormErrors, IItem, IItemList, IOrder, ItemCategory } from "../types/index"
+import { BaseEvents, FormErrors, IItem, IItemList, IOrder, ItemCategory } from "../types/index"
 import { Page } from "./Page";
 import { Model } from './base/Model'
 
@@ -20,7 +20,7 @@ export class AppState extends Model<AppState> {
   addItemToBasket(item: IItemFull) {
     if(!this.basket.includes(item.id)) {
       this.basket.push(item.id);
-      this.emitChanges('items:changed', {itemList: this.itemList});
+      this.emitChanges(BaseEvents.ITEMS_CHANGED, {itemList: this.itemList});
     } else return
   }
 
@@ -28,8 +28,8 @@ export class AppState extends Model<AppState> {
     if(this.basket.includes(item.id)) {
       const itemIndex = this.basket.findIndex(i => i === item.id);
       this.basket.splice(itemIndex, 1);
-      this.emitChanges('items:changed', {itemList: this.itemList});
-      this.emitChanges('cart:open', {itemList: this.itemList})
+      this.emitChanges(BaseEvents.ITEMS_CHANGED, {itemList: this.itemList});
+      this.emitChanges(BaseEvents.OPEN_BASKET, {itemList: this.itemList})
     }
   }
 
@@ -39,13 +39,13 @@ export class AppState extends Model<AppState> {
 
   setPreview(item: IItemFull) {
     this.preview = item.id;
-    this.emitChanges('item:changed-preview', item)
+    this.emitChanges(BaseEvents.CHANGE_PREVIEW, item)
   }
 
   setItemList(data: {items: IItemFull[]; total: number}) {
     const { items } = data;
     this.itemList = [...items];
-    this.emitChanges('items:changed', {itemList: this.itemList})
+    this.emitChanges(BaseEvents.ITEMS_CHANGED, {itemList: this.itemList})
   }
 
   getTotalPrice() {
@@ -64,14 +64,14 @@ export class AppState extends Model<AppState> {
 
   clearBasket() {
     this.basket = [];
-    this.emitChanges('items:changed', {itemList: this.itemList})
+    this.emitChanges(BaseEvents.ITEMS_CHANGED, {itemList: this.itemList})
   }
 
   setOrderField(field: keyof Omit<IOrder, 'total' | 'items'>, value: string) {
     this.order[field] = value;
 
     if (this.validateOrder()) {
-        this.events.emit('order:ready', this.order);
+        this.events.emit(BaseEvents.ORDER_READY, this.order);
     }
   }
 
@@ -92,7 +92,7 @@ export class AppState extends Model<AppState> {
     }
 
     this.formErrors = errors;
-    this.events.emit('formErrors:change', this.formErrors);
+    this.events.emit(BaseEvents.FORM_ERRORS_CHANGE, this.formErrors);
     return Object.keys(errors).length === 0;
   }
 

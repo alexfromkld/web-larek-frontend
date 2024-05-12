@@ -9,6 +9,7 @@ import { Page } from './components/Page';
 import { Modal } from './components/common/Modal';
 import { cloneTemplate, createElement, ensureElement } from './utils/utils';
 import { Basket } from './components/common/Basket';
+import { BaseEvents } from './types';
 
 //шаблоны
 const cardCatalogTemplate = ensureElement<HTMLTemplateElement>('#card-catalog');
@@ -29,10 +30,10 @@ EventEmitter.onAll(({ eventName, data }) => {
 });
 
 //отрисовка карточек при изменении 
-EventEmitter.on<CatalogChangeEvent>('items:changed', () => {
+EventEmitter.on<CatalogChangeEvent>(BaseEvents.ITEMS_CHANGED, () => {
 	page.catalog = appData.itemList.map((item) => {
 		const product = new CatalogItem(cloneTemplate(cardCatalogTemplate), {
-			onClick: () => EventEmitter.emit('item:open-preview', item),
+			onClick: () => EventEmitter.emit(BaseEvents.OPEN_PREVIEW, item),
 		});
 
 		return product.render({
@@ -48,14 +49,14 @@ EventEmitter.on<CatalogChangeEvent>('items:changed', () => {
 });
 
 //открыть модальное окно карточки
-EventEmitter.on('item:open-preview', (item: IItemFull) => {
+EventEmitter.on(BaseEvents.OPEN_PREVIEW, (item: IItemFull) => {
   appData.setPreview(item)
 })
 
 //изменение открытого товара
-EventEmitter.on('item:changed-preview', (item: IItemFull) => {
+EventEmitter.on(BaseEvents.CHANGE_PREVIEW, (item: IItemFull) => {
 	const card = new CatalogItem(cloneTemplate(cardPreviewTemplate), {
-		onClick: () => EventEmitter.emit('basket:add-item', item),
+		onClick: () => EventEmitter.emit(BaseEvents.ADD_ITEM, item),
 	})
 
 	modal.render({
@@ -73,17 +74,17 @@ EventEmitter.on('item:changed-preview', (item: IItemFull) => {
 })
 
 //добавить в корзину
-EventEmitter.on('basket:add-item', (item: IItemFull) => {
+EventEmitter.on(BaseEvents.ADD_ITEM, (item: IItemFull) => {
 	appData.addItemToBasket(item);
 	modal.close();
 })
 
 
 
-EventEmitter.on('cart:open', () => {
+EventEmitter.on(BaseEvents.OPEN_BASKET, () => {
 	const items = appData.getBasket().map((item, index) => {
 		const product = new BasketItem(cloneTemplate(itemBasketTemplate), {
-			onClick: () => EventEmitter.emit('basket:remove-item', item),
+			onClick: () => EventEmitter.emit(BaseEvents.REMOVE_ITEM, item),
 		});
 		return product.render({
 			index: index + 1,
@@ -103,15 +104,15 @@ EventEmitter.on('cart:open', () => {
 	})
 })
 
-EventEmitter.on('basket:remove-item', (item: IItemFull) => {	
+EventEmitter.on(BaseEvents.REMOVE_ITEM, (item: IItemFull) => {	
 	appData.removeItemFromBasket(item);
 })
 
-EventEmitter.on('modal:open', () => {
+EventEmitter.on(BaseEvents.OPEN_MODAL, () => {
 	page.locked = true;
 })
 
-EventEmitter.on('modal:close', () => {
+EventEmitter.on(BaseEvents.CLOSE_MODAL, () => {
 	page.locked = false;
 })
 
