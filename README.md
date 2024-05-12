@@ -377,5 +377,20 @@ export interface IShopApi {
    clearOrder() Очищает данные заказа.
    ```
 
+## Основные события приложения
+  export const BaseEvents = {
+  ['ITEMS_CHANGED']: 'items:changed',
+  ['OPEN_PREVIEW']: 'item:open-preview',
+  ['CHANGE_PREVIEW']: 'item:changed-preview',
+  ['OPEN_BASKET']: 'basket:open',
+  ['ADD_ITEM']: 'basket:add-item',
+  ['REMOVE_ITEM']: 'basket:remove-item',
+  ['OPEN_MODAL']: 'modal:open',
+  ['CLOSE_MODAL']: 'modal:close',
+  ['OPEN_ORDER']: 'order:open',
+  ['ORDER_READY']: 'order:ready',
+  ['FORM_ERRORS_CHANGE']: 'formErrors:change',
+  ['SET_PAYMENT_TYPE']: 'order:setPaymentType'
+}
 
    
