@@ -42,6 +42,11 @@ export interface IShopApi {
   makeOrder: (order: IOrder) => Promise<IOrderResult>
 }
 
+export const BaseEvents = {
+  ['ITEMS_CHANGED']: 'items:changed',
+  
+}
+
 
 
 

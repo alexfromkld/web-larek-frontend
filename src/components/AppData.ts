@@ -13,14 +13,7 @@ export type CatalogChangeEvent = {
 export class AppState extends Model<AppState> {
   basket: string[] = [];
   itemList: IItemFull[] = [];
-  order = {
-    payment: null as null | string,
-    address: '',
-    email: '',
-    phone: '',
-    total: 0,
-    items: []
-  } as IOrder;
+  order: IOrder;
   preview: string | null;
   formErrors: FormErrors = {};
 

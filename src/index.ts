@@ -79,6 +79,7 @@ EventEmitter.on('basket:add-item', (item: IItemFull) => {
 })
 
 
+
 EventEmitter.on('cart:open', () => {
 	const items = appData.getBasket().map((item, index) => {
 		const product = new BasketItem(cloneTemplate(itemBasketTemplate), {

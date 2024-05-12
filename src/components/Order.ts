@@ -4,7 +4,7 @@ import {IEvents} from "./base/events";
 import {ensureElement} from "../utils/utils";
 
 export class Order extends Form<IOrder> {
-    protected _paymentButton;
+    protected _paymentButton: HTMLButtonElement[];
 
     constructor(container: HTMLFormElement, events: IEvents) {
         super(container, events);
