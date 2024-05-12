@@ -42,22 +42,122 @@ yarn build
 ```
 
 ## Документация
-Базовый код
 
-1. Класс Component<T>
-   Абстрактный класс, базовый класс для всех элементов интерфейса. Содержит следующие методы:
+## Типы
+export type ItemCategory = 'софт-скил' | 'другое' | 'дополнительное' | 'кнопка' | 'хард-скил';
+
+export type FormErrors = Partial<Record<keyof IOrder, string>>
+
+export type ApiListResponse<Type> = {
+  total: number,
+  items: Type[]
+};
+
+export interface IItem {
+  category: ItemCategory,
+  description: string,
+  id: string,
+  image: string,
+  price: number | null,
+  title: string
+}
+
+export interface IItemList {
+  total: number,
+  items: IItem[]
+}
+
+export interface IOrder {
+  payment: string,
+  address: string,
+  email: string,
+  phone: string,
+  total: number,
+  items: string[]
+}
+
+export interface IOrderResult {
+  id: string,
+  total: number,
+  error?: string
+}
+
+export interface IShopApi {
+  getItems: () => Promise<IItemList>;
+  getItem: (id: string) => Promise<IItem>;
+  makeOrder: (order: IOrder) => Promise<IOrderResult>
+}
+
+##Базовый код
+
+1. Класс Api
+   Обеспечивает основную функциональность для взаимодействия с сервером. Тип ApiPostMethods ограничивает возможные методы запросов (POST, PUT, DELETE).
+
+   - baseUrl: string (строка содержащая базоый URL-адрес для всех запросов)
+   - #options: RequestInit ({} содержащий опции запроса по умолчанию, наппример Headers)
+   ```
+   - constructor(string, RequestInit = {}) метод создания нового экземпляра Api, принимает базовый URL: string и параметры запроса: RequestInit
+   - #handleResponse(Response): Promise<object> обрабатывает ответы с сервера
+   - get(string) GET-запрос с сервера
+   - post(string, object, ApiPostMethods = 'POST') метод выполнения POST-запроса
+
+2. Класс Component<T>
+   Абстрактный класс, служит в качестве базового компонента для работы с DOM, описание основных методов и свойств:
 ```
-   - toggleClass
-   - setText
-   - setDisabled
-   - setHidden
-   - setVisible
-   - setImage
-   - render
+   - constructor(HTMLElement) принимает контейнерный элемент
 ```
-3. Класс Model<T>
-   Так же является абстрактным классом. Отслеживает изменение компонентов. Включает в себя единственный метод emitChanges который сообщает об изменение модели.
-4. Класс AppState
+Методы
+```
+   - toggleClass(HTMLElement, string, boolean?) переключение класса элемента
+   - setText(HTMLElement, unknown) устанавливает текстовое содержимое указанного элемента
+   - setDisabled(HTMLElement, boolean) устанавливает/снимает блокировку с элемента
+   - setHidden(HTMLElement) скрывает указанный элемент
+   - setVisible(HTMLElement) отображает указанный элемент
+   - setImage(HTMLImageElement, string, string?) устанавливет изображение
+   - render(Partial<T>): HTMLElement метод который можно переопределить в дочерних коассах для отображения компонента. Возвращает контейнерный элемент
+```
+3. Класс EventEmitter
+   Обечпечивает работу событий. Его функции это возможность установить и снять слушателей событий, вызвать слушателей при возникновении события. Имеет следущие методы:
+
+   Типы (EventName, Subscriber, EmitterEvent)
+   - EventName - Алиас для строкового типа или регулярного выражения, представляющего названия событий.
+   - Subscriber - Алиас для функции, которая является обработчиком события.
+   - EmitterEvent - Интерфейс, представляющий структуру данных события.
+
+   Интерфейс IEvents:
+   ```
+   on<T extends object>(EventName, callback) Метод для подписки на событие. Принимает название события и коллбек, который будет вызван при наступлении события.
+   emit<T extends object>(string, T): void Метод для инициирования события. Принимает название события и опциональные данные, которые будут переданы обработчикам.
+   trigger<T extends object>(string, Partial<T>?) Метод, который возвращает функцию-триггер для определенного события. Этот триггер может быть вызван для инициирования события с заданными данными.
+   ```
+   Свойства
+   ```
+   _events: Map<EventName, Set<Subscriber>> хранит множество подписчиков для каждого события
+   ```
+   Методы
+   ```
+   -on Устанавливает обработчик на указанное событие.
+   -off Удаляет обработчик с указанного события.
+   -emit Инициирует событие, вызывая все подписанные обработчики.
+   -onAll Устанавливает обработчик на все события.
+   -ofAll Удаляет все обработчики событий.
+   -trigger Создает триггер для указанного события.
+   ```
+
+4. Класс Model<T>
+   Служит для создания моделей данных в приложении. Вот краткое описание его основных элементов:
+
+   isModel(obj: unknown): obj is Model<any> Гарда для проверки на модель.
+
+   Абстрактный класс Model<T>:
+   ```
+   - constructor(Partial<T>, IEvents(см.выше)) принимает частичные данные модели и {} событий IEvents. При создании экземпляра модели, данные копируются в объект, и события используются для уведомления об изменениях.
+   - emitChanges(string, object) оповещает подписчиков об изменениях в модели.
+   ```
+
+
+   
+6. Класс AppState
    Управляет состоянием приложения. Содержит следущие методы:
    ```
    - addItemToBasket (добавляет товар в корзину)
@@ -71,18 +171,7 @@ yarn build
    - validateOrder (валидация полей заказа)
    - clearOrder (очистить поля заказа)
    ```
-6. Класс EventEmitter
-   Обечпечивает работу событий. Его функции это возможность установить и снять слушателей событий, вызвать слушателей при возникновении события. Имеет следущие методы:
-   ```
-   -on
-   -off
-   -emit
-   -onAll
-   -ofAll
-   -trigger
-   ```
-
-
+   
 Классы отображения
 
 1. Класс Page
@@ -131,43 +220,4 @@ yarn build
 11. Класс Order наследует класс Form. Выполняет функцию отображния заказа и управление им. Реагирует на изменение состояние кнопок выбора оплаты. Так же устанвливает информацию покупателя.
 12. Класс Success наследует абстрактный класс Component. Оторбражает результаты заказа.
 
-## Типы
-export type ItemCategory = 'софт-скил' | 'другое' | 'дополнительное' | 'кнопка' | 'хард-скил';
-
-export type FormErrors = Partial<Record<keyof IOrder, string>>
-
-export interface IItem {
-  category: ItemCategory,
-  description: string,
-  id: string,
-  image: string,
-  price: number | null,
-  title: string
-}
-
-export interface IItemList {
-  total: number,
-  items: IItem[]
-}
-
-export interface IOrder {
-  payment: string,
-  address: string,
-  email: string,
-  phone: string,
-  total: number,
-  items: string[]
-}
-
-export interface IOrderResult {
-  id: string,
-  total: number,
-  error?: string
-}
-
-export interface IShopApi {
-  getItems: () => Promise<IItemList>;
-  getItem: (id: string) => Promise<IItem>;
-  makeOrder: (order: IOrder) => Promise<IOrderResult>
-}
    
