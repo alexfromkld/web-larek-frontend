@@ -92,14 +92,15 @@ export interface IShopApi {
 
 1. Класс Api
    Обеспечивает основную функциональность для взаимодействия с сервером. Тип ApiPostMethods ограничивает возможные методы запросов (POST, PUT, DELETE).
-
+   ```
    - baseUrl: string (строка содержащая базоый URL-адрес для всех запросов)
    - #options: RequestInit ({} содержащий опции запроса по умолчанию, наппример Headers)
-   ```
+
    - constructor(string, RequestInit = {}) метод создания нового экземпляра Api, принимает базовый URL: string и параметры запроса: RequestInit
    - #handleResponse(Response): Promise<object> обрабатывает ответы с сервера
    - get(string) GET-запрос с сервера
    - post(string, object, ApiPostMethods = 'POST') метод выполнения POST-запроса
+   ```
 
 2. Класс Component<T>
    Абстрактный класс, служит в качестве базового компонента для работы с DOM, описание основных методов и свойств:
