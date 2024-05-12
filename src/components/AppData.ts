@@ -1,8 +1,13 @@
 import { FormErrors, IItem, IItemList, IOrder, ItemCategory } from "../types/index"
+import { Page } from "./Page";
 import { Model } from './base/Model'
 
 export interface IItemFull extends IItem {
   status: boolean;
+}
+
+export type CatalogChangeEvent = {
+  catalog: IItemFull[];
 }
 
 export class AppState extends Model<AppState> {
@@ -22,7 +27,7 @@ export class AppState extends Model<AppState> {
   addItemToBasket(item: IItemFull) {
     if(!this.basket.includes(item.id)) {
       this.basket.push(item.id);
-      this.emitChanges('items:chaged', {itemList: this.itemList});
+      this.emitChanges('items:changed', {itemList: this.itemList});
     } else return
   }
 
@@ -30,7 +35,8 @@ export class AppState extends Model<AppState> {
     if(this.basket.includes(item.id)) {
       const itemIndex = this.basket.findIndex(i => i === item.id);
       this.basket.splice(itemIndex, 1);
-      this.emitChanges('items:chaged', {itemList: this.itemList});
+      this.emitChanges('items:changed', {itemList: this.itemList});
+      this.emitChanges('cart:open', {itemList: this.itemList})
     }
   }
 

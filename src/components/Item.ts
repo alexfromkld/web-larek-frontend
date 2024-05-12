@@ -1,6 +1,7 @@
 import {Component} from "./base/Component";
 import {bem, createElement, ensureElement, } from "../utils/utils";
 import { ItemCategory } from "../types";
+import { ItemCategoryType } from "../utils/constants";
 
 interface IItemActions {
   onClick: (event: MouseEvent) => void;
@@ -65,7 +66,7 @@ export class Item<T> extends Component<IItem<T>> {
     set category(value: ItemCategory) {
       if(this._category) {
         this.setText(this._category, value);
-        this._category.classList.add(`card__category_${value}`);
+        this._category.classList.add(`card__category_${ItemCategoryType[value]}`);
       }
     }
 
@@ -78,7 +79,7 @@ export class Item<T> extends Component<IItem<T>> {
     }
 
     get price(): string {
-      return this._price.textContent || null;
+      return this._price.textContent || null
     }
 
     set description(value: string | string[]) {

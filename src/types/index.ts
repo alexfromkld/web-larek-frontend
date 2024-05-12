@@ -2,6 +2,11 @@ export type ItemCategory = 'софт-скил' | 'другое' | 'дополн�
 
 export type FormErrors = Partial<Record<keyof IOrder, string>>
 
+export type ApiListResponse<Type> = {
+  total: number,
+  items: Type[]
+};
+
 export interface IItem {
   category: ItemCategory,
   description: string,
