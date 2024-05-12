@@ -106,9 +106,7 @@ export interface IShopApi {
    Абстрактный класс, служит в качестве базового компонента для работы с DOM, описание основных методов и свойств:
 ```
    - constructor(HTMLElement) принимает контейнерный элемент
-```
-Методы
-```
+
    - toggleClass(HTMLElement, string, boolean?) переключение класса элемента
    - setText(HTMLElement, unknown) устанавливает текстовое содержимое указанного элемента
    - setDisabled(HTMLElement, boolean) устанавливает/снимает блокировку с элемента
